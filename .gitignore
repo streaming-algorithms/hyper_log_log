@@ -108,3 +108,7 @@ venv.bak/
 
 # DS_Store
 .DS_Store
+src/.DS_Store
+
+# ppt artifact
+~$2_hyperloglog.ppt

@@ -1,10 +1,18 @@
 import numpy as np
 
-
-def false_positive_rate(bit_array_size, nb_salt, input_cardinal):
-    return (1 - (1 - 1 / bit_array_size) ** (nb_salt * input_cardinal)) ** nb_salt
+from hyper_log_log.hyper_log_log import HyperLogLog
 
 
-def minimal_memory_footprint(input_cardinal, error_rate):
-    return int(
-        input_cardinal * np.log(error_rate) / np.log(1 / 2 ** np.log(2))) + 1
+def theoretical_error_rate(nb_bucket):
+    return 1.04 / np.sqrt(nb_bucket)
+
+
+def experimental_error_rate(nb_buckets, cardinality, nb_iterations=1):
+    error_rate_list = []
+    for _ in range(nb_iterations):
+        hyper_log_log = HyperLogLog(nb_buckets=nb_buckets)
+        for item in range(cardinality):
+            hyper_log_log.add_item(item=item)
+        _cardinality = hyper_log_log.estimate_cardinality()
+        error_rate_list.append(abs(cardinality - _cardinality) / cardinality)
+    return sum(error_rate_list) / nb_iterations
