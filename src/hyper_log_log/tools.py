@@ -15,4 +15,4 @@ def experimental_error_rate(nb_buckets, cardinality, nb_iterations=1):
             hyper_log_log.add_item(item=item)
         _cardinality = hyper_log_log.estimate_cardinality()
         error_rate_list.append(abs(cardinality - _cardinality) / cardinality)
-    return sum(error_rate_list) / nb_iterations
+    return np.median(error_rate_list)
